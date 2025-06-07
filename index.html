@@ -391,15 +391,20 @@
     function updateMood(mood) {
       currentMood = mood;
       document.body.className = mood ? 'mood-' + mood : '';
-      // Immediately recommend movies for this mood
       if (!mood) {
         displayMovies(allMovies); // Show all if no mood selected
       } else {
-        // Get genre IDs for this mood
-        const genreIds = Object.keys(genreToMood)
-          .filter(id => genreToMood[id] === currentMood)
-          .map(Number);
-        // Filter movies that have at least one matching genre
+        let genreIds = [];
+        if (mood === 'sad') {
+          // Recommend happy/comedy/animation movies
+          genreIds = Object.keys(genreToMood)
+            .filter(id => genreToMood[id] === 'happy')
+            .map(Number);
+        } else {
+          genreIds = Object.keys(genreToMood)
+            .filter(id => genreToMood[id] === currentMood)
+            .map(Number);
+        }
         const filteredMovies = allMovies.filter(movie =>
           movie.genre_ids && movie.genre_ids.some(id => genreIds.includes(id))
         );
